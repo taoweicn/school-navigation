@@ -1,0 +1,76 @@
+{
+  "culturalAttraction": [
+    {
+      "name": "A",
+      "longitude": 12,
+      "latitude": 12,
+      "availablePlaces": [
+        "B",
+        "F",
+        "D"
+      ]
+    },
+    {
+      "name": "B",
+      "longitude": 23,
+      "latitude": 12,
+      "availablePlaces": [
+        "D",
+        "C",
+        "A"
+      ]
+    },
+    {
+      "name": "D",
+      "longitude": 54,
+      "latitude": 123,
+      "availablePlaces": [
+        "B",
+        "C",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "name": "H",
+      "longitude": 65,
+      "latitude": 1,
+      "availablePlaces": [
+        "D",
+        "F"
+      ]
+    }
+  ],
+  "classroom": [
+    {
+      "name": "C",
+      "longitude": 23,
+      "latitude": 54,
+      "availablePlaces": [
+        "F",
+        "B",
+        "D"
+      ]
+    }
+  ],
+  "dormitory": [
+    {
+      "name": "E",
+      "longitude": 11,
+      "latitude": 33,
+      "availablePlaces": [
+        "F"
+      ]
+    },
+    {
+      "name": "F",
+      "longitude": 33,
+      "latitude": 22,
+      "availablePlaces": [
+        "E",
+        "A",
+        "H"
+      ]
+    }
+  ]
+}
