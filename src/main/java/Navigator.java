@@ -8,8 +8,12 @@ public class Navigator {
   private Building[] dormitory;
 
   public static void main(String[] args) {
+    long startTime = System.nanoTime();
     Navigator n = new Navigator();
-    n.travelAllCulturalAttractions("F");
+//    n.travelAllCulturalAttractions("F");
+    n.findTheShortestPath("A", "E");
+    long endTime = System.nanoTime();
+    System.out.println("程序运行时间： " + (endTime - startTime) + "ns");
   }
 
   public Navigator() {
@@ -91,6 +95,10 @@ public class Navigator {
     return null;
   }
 
+  public int getBuildingsNum() {
+    return this.classroom.length + this.culturalAttraction.length + this.dormitory.length;
+  }
+
   /**
    * 从起点开始，不重复地遍历所有人文景点
    * @param origin 起点
@@ -161,5 +169,44 @@ public class Navigator {
       distance += this.getBuildingByName(route[i]).getDistance(this.getBuildingByName(route[i + 1]));
     }
     return distance;
+  }
+
+  /**
+   * Dijkstra最短路径算法
+   * @param start 起点
+   * @param end 终点
+   */
+  public HashMap<String[], Double> findTheShortestPath(String start, String end) {
+    HashMap<String[], Double> pathAndDistance = new HashMap<>(1);
+    HashMap<String, Double> distances = new HashMap<>(this.getBuildingsNum());
+    distances.put(start, 0.0);
+    ArrayList<String[]> results = new ArrayList<>(0);
+    this.findPath(this.getBuildingByName(start), end, distances, new String[] { start }, results);
+    System.out.println(distances);
+    pathAndDistance.put(results.get(results.size() - 1), distances.get(end));
+    return pathAndDistance;
+  }
+
+  public void findPath(Building start, String end, HashMap distances, String[] route, ArrayList<String[]> res) {
+    double currentDistance = (double) distances.get(start.getName());
+    for (String buildingName: start.getAvailablePlaces()) {
+      if (Arrays.asList(route).contains(buildingName)) {
+        continue;
+      }
+      Building building = this.getBuildingByName(buildingName);
+      double nextDistance = currentDistance + start.getDistance(building);
+      double distance = (double) distances.getOrDefault(buildingName, Double.MAX_VALUE);
+      if(nextDistance < distance) {
+        String[] newRoute = Arrays.copyOf(route, route.length + 1);
+        newRoute[route.length] = buildingName;
+        distances.put(buildingName, nextDistance);
+        // 到终点即终止递归
+        if(buildingName.equals(end)) {
+          res.add(newRoute);
+        } else {
+          this.findPath(building, end, distances, newRoute, res);
+        }
+      }
+    }
   }
 }

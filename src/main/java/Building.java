@@ -32,10 +32,14 @@ class Building extends Location {
   }
 
   public double getDistance(Building building) {
-    if (Arrays.asList(this.availablePlaces).contains(building.getName())) {
+    if (this.whetherReachBuilding(building.getName())) {
       return super.getDistance(building);
     } else {
       throw new RuntimeException("can not reach the building directly");
     }
+  }
+
+  public boolean whetherReachBuilding(String name) {
+    return Arrays.asList(this.availablePlaces).contains(name);
   }
 }
