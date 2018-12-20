@@ -1,7 +1,5 @@
 import java.util.Arrays;
 
-enum Type { CULTURAL_ATTRACTION, CLASSROOM, DORMITORY };
-
 class Building extends Location {
   private String name;
   private Type type;

@@ -3,19 +3,7 @@ import java.util.*;
 import com.google.gson.*;
 
 public class Navigator {
-  private Building[] culturalAttraction;
-  private Building[] classroom;
-  private Building[] dormitory;
-
-  public static void main(String[] args) {
-    long startTime = System.nanoTime();
-    Navigator n = new Navigator();
-//    n.travelAllCulturalAttractions("F");
-//    n.findTheShortestPath("A", "E");
-    n.travelAtLeastOneCulturalAttraction("E", "F");
-    long endTime = System.nanoTime();
-    System.out.println("程序运行时间： " + (endTime - startTime) + "ns");
-  }
+  private Building[] buildings;
 
   public Navigator() {
     this.readBuildingsInfo();
@@ -27,20 +15,8 @@ public class Navigator {
   public void readBuildingsInfo() {
     JsonParser parser = new JsonParser();
     try {
-      JsonObject buildings = (JsonObject) parser.parse(new FileReader("./src/main/resources/buildings.json"));
-
-      this.culturalAttraction = this.parseJsonArrayBuildings(
-        Type.CULTURAL_ATTRACTION,
-        buildings.get("culturalAttraction").getAsJsonArray()
-      );
-      this.classroom = this.parseJsonArrayBuildings(
-        Type.CLASSROOM,
-        buildings.get("classroom").getAsJsonArray()
-      );
-      this.dormitory = this.parseJsonArrayBuildings(
-        Type.DORMITORY,
-        buildings.get("dormitory").getAsJsonArray()
-      );
+      JsonArray buildings = (JsonArray) parser.parse(new FileReader("./src/main/resources/buildings.json"));
+      this.buildings = this.parseJsonArrayBuildings(buildings);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -48,22 +24,22 @@ public class Navigator {
 
   /**
    * 将json格式转为为java对象
-   * @param type 地点类型
    * @param jsonArray json格式的地点数据
    * @return java对象
    */
-  public Building[] parseJsonArrayBuildings(Type type, JsonArray jsonArray) {
+  public Building[] parseJsonArrayBuildings(JsonArray jsonArray) {
     Building[] buildings = new Building[jsonArray.size()];
     for (int i = 0; i < jsonArray.size(); i++) {
       JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
       JsonArray availablePlacesJson = jsonObject.get("availablePlaces").getAsJsonArray();
+      String type = jsonObject.get("type").getAsString();
       String[] availablePlaces = new String[availablePlacesJson.size()];
       for (int j = 0; j < availablePlacesJson.size(); j++) {
         availablePlaces[j] = availablePlacesJson.get(j).getAsString();
       }
       buildings[i] = new Building(
         jsonObject.get("name").getAsString(),
-        type,
+        Type.mapStringToType(type),
         jsonObject.get("longitude").getAsFloat(),
         jsonObject.get("latitude").getAsFloat(),
         availablePlaces
@@ -78,26 +54,34 @@ public class Navigator {
    * @return java对象
    */
   public Building getBuildingByName(String name) {
-    for (Building culturalAttractions: this.culturalAttraction) {
-      if (culturalAttractions.getName().equals(name)) {
-        return culturalAttractions;
-      }
-    }
-    for (Building classroom: this.classroom) {
-      if (classroom.getName().equals(name)) {
-        return classroom;
-      }
-    }
-    for (Building dormitory: this.dormitory) {
-      if (dormitory.getName().equals(name)) {
-        return dormitory;
+    for (Building building: this.buildings) {
+      if (building.getName().equals(name)) {
+        return building;
       }
     }
     return null;
   }
 
-  public int getBuildingsNum() {
-    return this.classroom.length + this.culturalAttraction.length + this.dormitory.length;
+  public Building[] getAllBuildings() {
+    return this.buildings;
+  }
+
+  public Building[] getBuildingsByType(Type type) {
+    ArrayList result = new ArrayList();
+    for (Building building: this.buildings) {
+      if (building.getType() == type) {
+        result.add(building);
+      }
+    }
+    return (Building[]) result.toArray(new Building[0]);
+  }
+
+  public Building[] getBuildingsPath(String [] path) {
+    Building[] buildings = new Building[path.length];
+    for(int i = 0; i < path.length; i++) {
+      buildings[i] = this.getBuildingByName(path[i]);
+    }
+    return buildings;
   }
 
   /**
@@ -157,7 +141,7 @@ public class Navigator {
    */
   public boolean judgeWhetherAllTraveled(String[] route){
     List routeList = Arrays.asList(route);
-    for (Building culturalAttractions: this.culturalAttraction) {
+    for (Building culturalAttractions: this.getBuildingsByType(Type.CULTURAL_ATTRACTION)) {
       if (!routeList.contains(culturalAttractions.getName())) {
         return false;
       }
@@ -180,7 +164,7 @@ public class Navigator {
    * @return 最短路径数组
    */
   public String[] findTheShortestPath(String start, String end) {
-    HashMap<String, Double> distances = new HashMap<>(this.getBuildingsNum());
+    HashMap<String, Double> distances = new HashMap<>(this.buildings.length);
     distances.put(start, 0.0);
     ArrayList<String[]> results = new ArrayList<>(0);
     this.findPath(this.getBuildingByName(start), end, distances, new String[] { start }, results);
@@ -224,7 +208,7 @@ public class Navigator {
     } else {
       String[] minRoute = new String[0];
       double minDistance = Double.MAX_VALUE;
-      for (Building culturalAttraction: this.culturalAttraction) {
+      for (Building culturalAttraction: this.getBuildingsByType(Type.CULTURAL_ATTRACTION)) {
         String[] path1 = this.findTheShortestPath(start, culturalAttraction.getName());
         String[] path2 = this.findTheShortestPath(culturalAttraction.getName(), end);
         String[] route = new String[path1.length + path2.length - 1];

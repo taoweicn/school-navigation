@@ -1,76 +1,76 @@
-{
-  "culturalAttraction": [
-    {
-      "name": "A",
-      "longitude": 12,
-      "latitude": 12,
-      "availablePlaces": [
-        "B",
-        "F",
-        "D"
-      ]
-    },
-    {
-      "name": "B",
-      "longitude": 44,
-      "latitude": 12,
-      "availablePlaces": [
-        "D",
-        "C",
-        "A"
-      ]
-    },
-    {
-      "name": "D",
-      "longitude": 54,
-      "latitude": 123,
-      "availablePlaces": [
-        "B",
-        "C",
-        "H",
-        "A"
-      ]
-    },
-    {
-      "name": "H",
-      "longitude": 65,
-      "latitude": 1,
-      "availablePlaces": [
-        "D",
-        "F"
-      ]
-    }
-  ],
-  "classroom": [
-    {
-      "name": "C",
-      "longitude": 23,
-      "latitude": 54,
-      "availablePlaces": [
-        "F",
-        "B",
-        "D"
-      ]
-    }
-  ],
-  "dormitory": [
-    {
-      "name": "E",
-      "longitude": 12,
-      "latitude": 33,
-      "availablePlaces": [
-        "F"
-      ]
-    },
-    {
-      "name": "F",
-      "longitude": 12,
-      "latitude": 22,
-      "availablePlaces": [
-        "E",
-        "A",
-        "H"
-      ]
-    }
-  ]
-}
+[
+  {
+    "name": "A",
+    "type": "culturalAttraction",
+    "longitude": 340,
+    "latitude": 333,
+    "availablePlaces": [
+      "B",
+      "F",
+      "D"
+    ]
+  },
+  {
+    "name": "B",
+    "type": "culturalAttraction",
+    "longitude": 731,
+    "latitude": 442,
+    "availablePlaces": [
+      "A",
+      "E",
+      "F"
+    ]
+  },
+  {
+    "name": "D",
+    "type": "culturalAttraction",
+    "longitude": 123,
+    "latitude": 143,
+    "availablePlaces": [
+      "C",
+      "H",
+      "A"
+    ]
+  },
+  {
+    "name": "H",
+    "type": "culturalAttraction",
+    "longitude": 542,
+    "latitude": 180,
+    "availablePlaces": [
+      "D",
+      "F"
+    ]
+  },
+  {
+    "name": "C",
+    "type": "classroom",
+    "longitude": 113,
+    "latitude": 404,
+    "availablePlaces": [
+      "D",
+      "E"
+    ]
+  },
+  {
+    "name": "E",
+    "type": "dormitory",
+    "longitude": 500,
+    "latitude": 500,
+    "availablePlaces": [
+      "C",
+      "B"
+    ]
+  },
+  {
+    "name": "F",
+    "type": "dormitory",
+    "longitude": 712,
+    "latitude": 232,
+    "availablePlaces": [
+      "A",
+      "H",
+      "B"
+    ]
+  }
+]
