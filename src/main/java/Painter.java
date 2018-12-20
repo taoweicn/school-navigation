@@ -1,17 +1,40 @@
 import java.awt.*;
-import java.util.Arrays;
 
 public class Painter extends DrawComponent {
   private Navigator navigator;
+  private String start;
+  private String end;
+  private int mode;
 
-  public Painter() {
-    this.navigator = new Navigator();
+  public Painter(Navigator navigator) {
+    this.navigator = navigator;
+    this.mode = 0;
   }
 
   @Override
   public void paintComponent(Graphics g) {
     this.drawAllBuildingsAndRoads(g, this.navigator.getAllBuildings());
-    this.drawPath((Graphics2D) g, this.navigator.travelAtLeastOneCulturalAttraction("F", "C"));
+    System.out.println(this.mode);
+    if (this.mode == 1) {
+      this.drawPath((Graphics2D) g, this.navigator.travelAllCulturalAttractions(this.start).get(0));
+    } else if (this.mode == 2 ){
+      this.drawPath((Graphics2D) g, this.navigator.travelAtLeastOneCulturalAttraction(this.start, this.end));
+    }
+  }
+
+  public void setStart(String point) {
+    this.start = point;
+    System.out.println("start:" + point);
+  }
+
+  public void setEnd(String point) {
+    this.end = point;
+    System.out.println("end:" + point);
+  }
+
+  public void setMode(int mode) {
+    this.mode = mode;
+    this.repaint();
   }
 
   public void drawBuilding(Graphics g, Building building) {
@@ -52,13 +75,12 @@ public class Painter extends DrawComponent {
         float y2 = availablePlace.getLatitude();
         this.drawLine((Graphics2D) g, x1, y1, x2, y2, new Color(120, 165, 240));
         g.setColor(new Color(61, 77, 102));
-        g.drawString(Long.toString(Math.round(building.getDistance(availablePlace))), (int) (x1 + x2) / 2, (int) (y1 + y2) / 2);
+        g.drawString(Long.toString(Math.round(building.getDistance(availablePlace))), (int) (x1 + x2) / 2 + 10, (int) (y1 + y2) / 2 - 10);
       }
     }
   }
 
   public void drawPath(Graphics2D g2, String[] path) {
-    System.out.println(Arrays.toString(path));
     for (int i = 0; i < path.length - 1; i++) {
       Building building = this.navigator.getBuildingByName(path[i]);
       Building nextBuilding = this.navigator.getBuildingByName(path[i + 1]);

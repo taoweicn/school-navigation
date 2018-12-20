@@ -66,6 +66,14 @@ public class Navigator {
     return this.buildings;
   }
 
+  public String[] getAllBuildingsName() {
+    String [] buildingsName = new String[this.buildings.length];
+    for (int i = 0; i < this.buildings.length; i++) {
+      buildingsName[i] = this.buildings[i].getName();
+    }
+    return buildingsName;
+  }
+
   public Building[] getBuildingsByType(Type type) {
     ArrayList result = new ArrayList();
     for (Building building: this.buildings) {
