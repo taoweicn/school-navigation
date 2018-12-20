@@ -11,7 +11,8 @@ public class Navigator {
     long startTime = System.nanoTime();
     Navigator n = new Navigator();
 //    n.travelAllCulturalAttractions("F");
-    n.findTheShortestPath("A", "E");
+//    n.findTheShortestPath("A", "E");
+    n.travelAtLeastOneCulturalAttraction("E", "F");
     long endTime = System.nanoTime();
     System.out.println("程序运行时间： " + (endTime - startTime) + "ns");
   }
@@ -103,7 +104,7 @@ public class Navigator {
    * 从起点开始，不重复地遍历所有人文景点
    * @param origin 起点
    */
-  public void travelAllCulturalAttractions(String origin) {
+  public ArrayList<String[]> travelAllCulturalAttractions(String origin) {
     ArrayList<String[]> results = new ArrayList<>(0);
     this.travel(origin, this.getBuildingByName(origin), new String[] { origin }, results);
     double minDistance = Double.MAX_VALUE;
@@ -119,6 +120,7 @@ public class Navigator {
       }
     }
     System.out.println(minDistance);
+    return results;
   }
 
   /**
@@ -175,16 +177,14 @@ public class Navigator {
    * Dijkstra最短路径算法
    * @param start 起点
    * @param end 终点
+   * @return 最短路径数组
    */
-  public HashMap<String[], Double> findTheShortestPath(String start, String end) {
-    HashMap<String[], Double> pathAndDistance = new HashMap<>(1);
+  public String[] findTheShortestPath(String start, String end) {
     HashMap<String, Double> distances = new HashMap<>(this.getBuildingsNum());
     distances.put(start, 0.0);
     ArrayList<String[]> results = new ArrayList<>(0);
     this.findPath(this.getBuildingByName(start), end, distances, new String[] { start }, results);
-    System.out.println(distances);
-    pathAndDistance.put(results.get(results.size() - 1), distances.get(end));
-    return pathAndDistance;
+    return results.get(results.size() - 1);
   }
 
   public void findPath(Building start, String end, HashMap distances, String[] route, ArrayList<String[]> res) {
@@ -207,6 +207,37 @@ public class Navigator {
           this.findPath(building, end, distances, newRoute, res);
         }
       }
+    }
+  }
+
+  /**
+   * 至少遍历一个人文景点
+   * @param start 起点
+   * @param end 终点
+   * @return 最短路径字符串数组
+   */
+  public String[] travelAtLeastOneCulturalAttraction(String start, String end) {
+    Building startBuilding = this.getBuildingByName(start);
+    Building endBuilding = this.getBuildingByName(end);
+    if (startBuilding.getType() == Type.CULTURAL_ATTRACTION || endBuilding.getType() == Type.CULTURAL_ATTRACTION) {
+      return this.findTheShortestPath(start, end);
+    } else {
+      String[] minRoute = new String[0];
+      double minDistance = Double.MAX_VALUE;
+      for (Building culturalAttraction: this.culturalAttraction) {
+        String[] path1 = this.findTheShortestPath(start, culturalAttraction.getName());
+        String[] path2 = this.findTheShortestPath(culturalAttraction.getName(), end);
+        String[] route = new String[path1.length + path2.length - 1];
+        System.arraycopy(path1, 0, route, 0, path1.length);
+        System.arraycopy(path2, 1, route, path1.length, path2.length - 1);
+        double distance = this.calcRouteDistance(route);
+        if (distance < minDistance) {
+          minRoute = route;
+          minDistance = distance;
+        }
+      }
+      System.out.println(Arrays.toString(minRoute));
+      return minRoute;
     }
   }
 }
