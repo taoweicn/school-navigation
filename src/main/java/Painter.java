@@ -14,7 +14,6 @@ public class Painter extends DrawComponent {
   @Override
   public void paintComponent(Graphics g) {
     this.drawAllBuildingsAndRoads(g, this.navigator.getAllBuildings());
-    System.out.println(this.mode);
     if (this.mode == 1) {
       this.drawPath((Graphics2D) g, this.navigator.travelAllCulturalAttractions(this.start).get(0));
     } else if (this.mode == 2 ){
@@ -24,12 +23,10 @@ public class Painter extends DrawComponent {
 
   public void setStart(String point) {
     this.start = point;
-    System.out.println("start:" + point);
   }
 
   public void setEnd(String point) {
     this.end = point;
-    System.out.println("end:" + point);
   }
 
   public void setMode(int mode) {

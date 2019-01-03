@@ -111,7 +111,9 @@ public class Navigator {
         minDistance = distance;
       }
     }
-    System.out.println(minDistance);
+    if (results.size() == 0) {
+      System.out.println("Path does not exist!");
+    }
     return results;
   }
 
@@ -126,8 +128,8 @@ public class Navigator {
     for (String availablePlaceName: building.getAvailablePlaces()) {
       Building availablePlace = this.getBuildingByName(availablePlaceName);
       boolean flag = false;
-      // 表明是人文景点且未被遍历过
-      if(!Arrays.asList(route).contains(availablePlaceName) && availablePlace.getType() == Type.CULTURAL_ATTRACTION) {
+      // 未被遍历过
+      if(!Arrays.asList(route).contains(availablePlaceName)) {
         String[] newRoute = Arrays.copyOf(route, route.length + 1);
         newRoute[route.length] = availablePlaceName;
         this.travel(origin, availablePlace, newRoute, res);

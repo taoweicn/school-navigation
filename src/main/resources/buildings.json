@@ -2,13 +2,13 @@
   {
     "name": "A",
     "type": "culturalAttraction",
-    "longitude": 367,
-    "latitude": 211,
+    "longitude": 436,
+    "latitude": 224,
     "availablePlaces": [
       "B",
       "D",
       "H",
-      "I"
+      "J"
     ]
   },
   {
@@ -18,7 +18,9 @@
     "latitude": 340,
     "availablePlaces": [
       "D",
-      "G"
+      "G",
+      "I",
+      "J"
     ]
   },
   {
@@ -29,7 +31,8 @@
     "availablePlaces": [
       "B",
       "D",
-      "G"
+      "G",
+      "H"
     ]
   },
   {
@@ -49,14 +52,14 @@
     "longitude": 200,
     "latitude": 450,
     "availablePlaces": [
-      "A",
+      "C",
       "E"
     ]
   },
   {
     "name": "D",
     "type": "classroom",
-    "longitude": 70,
+    "longitude": 88,
     "latitude": 101,
     "availablePlaces": [
       "A",
@@ -80,11 +83,12 @@
     "name": "G",
     "type": "dormitory",
     "longitude": 409,
-    "latitude": 355,
+    "latitude": 363,
     "availablePlaces": [
       "C",
       "E",
-      "F"
+      "F",
+      "J"
     ]
   },
   {
@@ -94,7 +98,19 @@
     "latitude": 70,
     "availablePlaces": [
       "A",
-      "D"
+      "D",
+      "F"
+    ]
+  },
+  {
+    "name": "J",
+    "type": "dormitory",
+    "longitude": 211,
+    "latitude": 264,
+    "availablePlaces": [
+      "A",
+      "C",
+      "G"
     ]
   }
 ]
