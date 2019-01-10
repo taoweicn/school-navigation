@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 import com.google.gson.*;
+import java.awt.Point;
 
 public class Navigator {
   private Building[] buildings;
@@ -92,6 +93,19 @@ public class Navigator {
     return buildings;
   }
 
+  public Building getTheClosestBuildingByPoint(Point point) {
+    double minDistance = Double.MAX_VALUE;
+    Building result = null;
+    for (Building building: this.buildings) {
+      double distance = building.getDistance(new Location((float) point.getX(), (float) point.getY()));
+      if (distance <= 50 && distance < minDistance) {
+        minDistance = distance;
+        result = building;
+      }
+    }
+    return result;
+  }
+
   /**
    * 从起点开始，不重复地遍历所有人文景点
    * @param origin 起点
@@ -103,7 +117,6 @@ public class Navigator {
     for (int i = results.size() - 1; i >= 0; i--) {
       String[] res = results.get(i);
       double distance = this.calcRouteDistance(res);
-      System.out.println(Arrays.toString(res));
       // 如果这里是 <= 就可以去掉往返的重复路径，但也存在舍入误差
       if (minDistance < distance) {
         results.remove(res);
@@ -174,6 +187,9 @@ public class Navigator {
    * @return 最短路径数组
    */
   public String[] findTheShortestPath(String start, String end) {
+    if (start.equals(end)) {
+      return new String[] {start};
+    }
     HashMap<String, Double> distances = new HashMap<>(this.buildings.length);
     distances.put(start, 0.0);
     ArrayList<String[]> results = new ArrayList<>(0);

@@ -5,6 +5,8 @@ public class Painter extends DrawComponent {
   private String start;
   private String end;
   private int mode;
+  public static final int TRAVEL_MODE = 1;
+  public static final int NAVIGATOR_MODE = 2;
 
   public Painter(Navigator navigator) {
     this.navigator = navigator;
@@ -14,9 +16,9 @@ public class Painter extends DrawComponent {
   @Override
   public void paintComponent(Graphics g) {
     this.drawAllBuildingsAndRoads(g, this.navigator.getAllBuildings());
-    if (this.mode == 1) {
+    if (this.mode == TRAVEL_MODE) {
       this.drawPath((Graphics2D) g, this.navigator.travelAllCulturalAttractions(this.start).get(0));
-    } else if (this.mode == 2 ){
+    } else if (this.mode == NAVIGATOR_MODE){
       this.drawPath((Graphics2D) g, this.navigator.travelAtLeastOneCulturalAttraction(this.start, this.end));
     }
   }
@@ -66,6 +68,9 @@ public class Painter extends DrawComponent {
       this.drawBuilding(g, building);
       for(String availablePlaceName: building.getAvailablePlaces()) {
         Building availablePlace = this.navigator.getBuildingByName(availablePlaceName);
+        if (availablePlace == null) {
+          continue;
+        }
         float x1 = building.getLongitude();
         float y1 = building.getLatitude();
         float x2 = availablePlace.getLongitude();

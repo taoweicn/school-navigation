@@ -1,12 +1,40 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class Application extends JFrame {
+  private Navigator navigator = new Navigator();
   private Painter painter;
+  private JComboBox startComboBox;
+  private JComboBox endComboBox;
+
+  private class MouseHandle extends MouseAdapter {
+    @Override
+    public void mouseClicked(MouseEvent event) {
+      Building building = navigator.getTheClosestBuildingByPoint(event.getPoint());
+      if (building == null) {
+        return;
+      }
+      String buildingName = building.getName();
+      switch (event.getButton()) {
+        case MouseEvent.BUTTON1:
+          painter.setStart(buildingName);
+          startComboBox.setSelectedItem(buildingName);
+          break;
+        case MouseEvent.BUTTON3:
+          painter.setEnd(buildingName);
+          endComboBox.setSelectedItem(buildingName);
+          break;
+        default:
+      }
+    }
+  }
 
   public static void main(String[] args) {
     EventQueue.invokeLater(() -> {
       JFrame frame = new Application();
+      Image icon = new ImageIcon("./src/main/resources/icons/navigator.png").getImage();
+      frame.setIconImage(icon);
       frame.setSize(800, 600);
       frame.setTitle("校园导航系统");
       frame.setLocationRelativeTo(null);
@@ -16,10 +44,10 @@ public class Application extends JFrame {
   }
 
   public Application() {
-    Navigator navigator = new Navigator();
-    this.painter = new Painter(navigator);
+    this.painter = new Painter(this.navigator);
+    this.painter.addMouseListener(new MouseHandle());
     this.add(this.painter);
-    this.drawButton(navigator.getAllBuildingsName());
+    this.drawButton(this.navigator.getAllBuildingsName());
     this.pack();
   }
 
@@ -36,21 +64,21 @@ public class Application extends JFrame {
 
   public void drawButton(String[] buildingsName) {
     JPanel contentPane = new JPanel();
-    JComboBox startComboBox = this.setComboBox(contentPane, buildingsName, "选择起点：");
-    contentPane.add(startComboBox);
+    this.startComboBox = this.setComboBox(contentPane, buildingsName, "选择起点：");
+    contentPane.add(this.startComboBox);
     JButton travelButton = new JButton("游览人文景点");
     travelButton.addActionListener(event -> {
-      this.painter.setStart((String) startComboBox.getItemAt(startComboBox.getSelectedIndex()));
-      this.painter.setMode(1);
+      this.painter.setStart((String) this.startComboBox.getItemAt(this.startComboBox.getSelectedIndex()));
+      this.painter.setMode(Painter.TRAVEL_MODE);
     });
     contentPane.add(travelButton);
-    JComboBox endComboBox = this.setComboBox(contentPane, buildingsName, "选择终点：");
-    contentPane.add(endComboBox);
+    this.endComboBox = this.setComboBox(contentPane, buildingsName, "选择终点：");
+    contentPane.add(this.endComboBox);
     JButton navigateButton = new JButton("开始导航");
     navigateButton.addActionListener(event -> {
-      this.painter.setStart((String) startComboBox.getItemAt(startComboBox.getSelectedIndex()));
-      this.painter.setEnd((String) endComboBox.getItemAt(endComboBox.getSelectedIndex()));
-      this.painter.setMode(2);
+      this.painter.setStart((String) this.startComboBox.getItemAt(this.startComboBox.getSelectedIndex()));
+      this.painter.setEnd((String) this.endComboBox.getItemAt(this.endComboBox.getSelectedIndex()));
+      this.painter.setMode(Painter.NAVIGATOR_MODE);
     });
     contentPane.add(navigateButton);
     this.add(contentPane, BorderLayout.NORTH);

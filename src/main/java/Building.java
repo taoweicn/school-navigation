@@ -3,7 +3,6 @@ import java.util.Arrays;
 class Building extends Location {
   private String name;
   private Type type;
-  private Location location;
   private String[] availablePlaces;
 
   public Building(String name, Type type, float longitude, float latitude, String[] availablePlaces) {
@@ -15,10 +14,6 @@ class Building extends Location {
 
   public String getName() {
     return this.name;
-  }
-
-  public Location getBuildingLocation() {
-    return this.location;
   }
 
   public String[] getAvailablePlaces() {
