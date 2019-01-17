@@ -94,7 +94,7 @@ public class Navigator {
   }
 
   public Building getTheClosestBuildingByPoint(Point point) {
-    double minDistance = Double.MAX_VALUE;
+    double minDistance = Double.POSITIVE_INFINITY;
     Building result = null;
     for (Building building: this.buildings) {
       double distance = building.getDistance(new Location((float) point.getX(), (float) point.getY()));
@@ -113,7 +113,7 @@ public class Navigator {
   public ArrayList<String[]> travelAllCulturalAttractions(String origin) {
     ArrayList<String[]> results = new ArrayList<>(0);
     this.travel(origin, this.getBuildingByName(origin), new String[] { origin }, results);
-    double minDistance = Double.MAX_VALUE;
+    double minDistance = Double.POSITIVE_INFINITY;
     for (int i = results.size() - 1; i >= 0; i--) {
       String[] res = results.get(i);
       double distance = this.calcRouteDistance(res);
@@ -205,7 +205,7 @@ public class Navigator {
       }
       Building building = this.getBuildingByName(buildingName);
       double nextDistance = currentDistance + start.getDistance(building);
-      double distance = (double) distances.getOrDefault(buildingName, Double.MAX_VALUE);
+      double distance = (double) distances.getOrDefault(buildingName, Double.POSITIVE_INFINITY);
       if(nextDistance < distance) {
         String[] newRoute = Arrays.copyOf(route, route.length + 1);
         newRoute[route.length] = buildingName;
@@ -233,7 +233,7 @@ public class Navigator {
       return this.findTheShortestPath(start, end);
     } else {
       String[] minRoute = new String[0];
-      double minDistance = Double.MAX_VALUE;
+      double minDistance = Double.POSITIVE_INFINITY;
       for (Building culturalAttraction: this.getBuildingsByType(Type.CULTURAL_ATTRACTION)) {
         String[] path1 = this.findTheShortestPath(start, culturalAttraction.getName());
         String[] path2 = this.findTheShortestPath(culturalAttraction.getName(), end);
