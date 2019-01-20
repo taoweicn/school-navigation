@@ -181,7 +181,7 @@ public class Navigator {
   }
 
   /**
-   * Dijkstra最短路径算法
+   * 最短路径算法
    * @param start 起点
    * @param end 终点
    * @return 最短路径数组
