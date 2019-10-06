@@ -1,14 +1,15 @@
 import java.awt.*;
+import java.util.Map;
 
 public class Painter extends DrawComponent {
+  static final int TRAVEL_MODE = 1;
+  static final int NAVIGATOR_MODE = 2;
   private Navigator navigator;
   private String start;
   private String end;
   private int mode;
-  public static final int TRAVEL_MODE = 1;
-  public static final int NAVIGATOR_MODE = 2;
 
-  public Painter(Navigator navigator) {
+  Painter(Navigator navigator) {
     this.navigator = navigator;
     this.mode = 0;
   }
@@ -17,56 +18,60 @@ public class Painter extends DrawComponent {
   public void paintComponent(Graphics g) {
     this.drawAllBuildingsAndRoads(g, this.navigator.getAllBuildings());
     if (this.mode == TRAVEL_MODE) {
-      this.drawPath((Graphics2D) g, this.navigator.travelAllCulturalAttractions(this.start).get(0));
-    } else if (this.mode == NAVIGATOR_MODE){
-      this.drawPath((Graphics2D) g, this.navigator.travelAtLeastOneCulturalAttraction(this.start, this.end));
+      this.drawPath((Graphics2D) g, this.navigator.travelAllCulturalAttractions(this.start));
+    } else if (this.mode == NAVIGATOR_MODE) {
+      this.drawPath(
+          (Graphics2D) g, this.navigator.travelAtLeastOneCulturalAttraction(this.start, this.end));
     }
   }
 
-  public void setStart(String point) {
+  void setStart(String point) {
     this.start = point;
   }
 
-  public void setEnd(String point) {
+  void setEnd(String point) {
     this.end = point;
   }
 
-  public void setMode(int mode) {
+  void setMode(int mode) {
     this.mode = mode;
     this.repaint();
   }
 
-  public void drawBuilding(Graphics g, Building building) {
+  private void drawBuilding(Graphics g, Building building) {
     String path = "";
     String name = "";
     int x = (int) building.getLongitude();
     int y = (int) building.getLatitude();
     switch (building.getType()) {
-      case CULTURAL_ATTRACTION: {
-        path = "./src/main/resources/icons/culturalAttraction.png";
-        name = "人文景点";
-        break;
-      }
-      case CLASSROOM: {
-        path = "./src/main/resources/icons/classroom.png";
-        name = "教室";
-        break;
-      }
-      case DORMITORY: {
-        path = "./src/main/resources/icons/dormitory.png";
-        name = "宿舍";
-        break;
-      }
+      case CULTURAL_ATTRACTION:
+        {
+          path = "./src/main/resources/icons/culturalAttraction.png";
+          name = "人文景点";
+          break;
+        }
+      case CLASSROOM:
+        {
+          path = "./src/main/resources/icons/classroom.png";
+          name = "教室";
+          break;
+        }
+      case DORMITORY:
+        {
+          path = "./src/main/resources/icons/dormitory.png";
+          name = "宿舍";
+          break;
+        }
       default:
     }
     super.drawImage(g, path, x, y - 15, 36, 36);
     g.drawString(name + building.getName(), x - 20, y + 18);
   }
 
-  public void drawAllBuildingsAndRoads(Graphics g, Building[] buildings) {
-    for(Building building: buildings) {
+  private void drawAllBuildingsAndRoads(Graphics g, Map<String, Building> buildings) {
+    for (Building building : buildings.values()) {
       this.drawBuilding(g, building);
-      for(String availablePlaceName: building.getAvailablePlaces()) {
+      for (String availablePlaceName : building.getAvailablePlaces()) {
         Building availablePlace = this.navigator.getBuildingByName(availablePlaceName);
         if (availablePlace == null) {
           continue;
@@ -77,12 +82,15 @@ public class Painter extends DrawComponent {
         float y2 = availablePlace.getLatitude();
         this.drawLine((Graphics2D) g, x1, y1, x2, y2, new Color(120, 165, 240));
         g.setColor(new Color(61, 77, 102));
-        g.drawString(Long.toString(Math.round(building.getDistance(availablePlace))), (int) (x1 + x2) / 2 + 10, (int) (y1 + y2) / 2 - 10);
+        g.drawString(
+            Long.toString(Math.round(building.getDistance(availablePlace))),
+            (int) (x1 + x2) / 2 + 10,
+            (int) (y1 + y2) / 2 - 10);
       }
     }
   }
 
-  public void drawPath(Graphics2D g2, String[] path) {
+  private void drawPath(Graphics2D g2, String[] path) {
     for (int i = 0; i < path.length - 1; i++) {
       Building building = this.navigator.getBuildingByName(path[i]);
       Building nextBuilding = this.navigator.getBuildingByName(path[i + 1]);

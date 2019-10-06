@@ -5,26 +5,26 @@ class Building extends Location {
   private Type type;
   private String[] availablePlaces;
 
-  public Building(String name, Type type, float longitude, float latitude, String[] availablePlaces) {
+  Building(String name, String type, float longitude, float latitude, String[] availablePlaces) {
     super(longitude, latitude);
     this.name = name;
-    this.type = type;
+    this.type = Type.mapStringToType(type);
     this.availablePlaces = availablePlaces;
   }
 
-  public String getName() {
+  String getName() {
     return this.name;
   }
 
-  public String[] getAvailablePlaces() {
+  String[] getAvailablePlaces() {
     return this.availablePlaces;
   }
 
-  public Type getType() {
+  Type getType() {
     return type;
   }
 
-  public double getDistance(Building building) {
+  double getDistance(Building building) {
     if (this.whetherReachBuilding(building.getName())) {
       return super.getDistance(building);
     } else {
@@ -32,7 +32,20 @@ class Building extends Location {
     }
   }
 
-  public boolean whetherReachBuilding(String name) {
+  private boolean whetherReachBuilding(String name) {
     return Arrays.asList(this.availablePlaces).contains(name);
+  }
+
+  @Override
+  public String toString() {
+    return "Building{"
+        + "name='"
+        + name
+        + '\''
+        + ", type="
+        + type
+        + ", availablePlaces="
+        + Arrays.toString(availablePlaces)
+        + '}';
   }
 }
